@@ -1,0 +1,70 @@
+This program creates Version 1 and Version 1.1 IMS common cartridge (CC) formats and stages the zip/imscc
+files into the cartridgeStagingPath setting from the given plist file.
+
+Current active plist kit files are located in the /Users/eslcd/etc/plist/ directory
+
+Here's the steps to create a cartridge:
+    1. Create new cartridge plist XML file. The easiest way to do this is copy an existing file with a new name
+       and edit the file with the new data.
+    2. Run the modTest.pl on the xml/plist file after the content has been pushed to the production server
+    3. Run the buildCartridge.pl program with the newly created plist file as the only argument. e.g.
+       buildCartridge.pl ~eslcd/etc/plist/2E_Physical_Geology_Kit7103_Standard.plist
+    4. Review the output sent to the terminal for any warnings or errors
+    5. Done
+
+Anatomy of a kit plist file
+The plist XML file contains the kit/course metadata and the corresponding labs. IMPORTANT! lab names and
+kit paths must exectly match the directory names that are created in the /Users/eslcd/ProductionFeed/V3
+hierarchy.
+
+Also, once a cartridge has been delivered to a customer, the directory names cannot be changed without
+reloading the cartridge on the customer side. 
+
+Contents of the plist XML file:
+    targetPath
+        The location of the top level directory for this kit. It is used by rsync (printSync) to push the content.
+        sourcePath
+        Location of the top level directory to pull from. also used by the rsync program. The root path is always
+        /Users/eslcd/ProductionFeed/V3/ and the remaining path will be different for each category and kit. e.g.
+        /Users/eslcd/ProductionFeed/V3/Microbiology/UNT6200_Northern_Texas_Microbiology/
+    pemPath
+        the location of the pem file. Used to connect to the production server.
+    title
+        The title of the kit.
+    sku
+        The SKU for the kit
+    httpPath
+        The top level https path to the kit. e.g.
+        https://esciencelabs.com/sites/default/files/V3/Microbiology/UNT6200_Northern_Texas_Microbiology/
+    kitName
+        Name of the kit. Usually the top level directory name. e.g. UNT6200_Northern_Texas_Microbiology
+        cartridgeStagingPath
+    Top level path to store cartridge files:
+        /Users/eslcd/ProductionFeed/Cartridges/Microbiology/UNT6200_Northern_Texas_Microbiology/. This
+        directory is created automatically.
+    modules
+        An array of labs defined by a dictionary structure for each lab. The structure will always be the same but
+        the content will be different for each kit/course.
+    array
+        Starting tag of the array
+    dict
+        The dictionary structure for a lab. This structure is repeated for each lab in the kit.
+    title
+        Title of the lab.
+    name
+        Name of the directory used for the lab. Can only contain alpha numeric characters. i.e. no embedded
+        white space and/or special characters. e.g. MB_UNT6200_L00_Getting_Started. It is also case
+        sensitive.
+        
+Description of modTest.pl [required plist file]
+    A PERL script wrapper around the printCURL program. This script creates the shell scripts and runs them
+    automatically. The plist file parameter is required.
+        Examples
+        Best way to use the labTest.pl script is dump it to a file and do a grep on the HTTP header for status
+        To test a single kit/plist:
+            1. modTest.pl etc/plist/UNT6200_Northern_Texas_Microbiology.plist > curl.out
+            2. grep -in http curl.out
+            If you see something other than a HTTP 200 OK in the output for any invocation of the modTest.pl script, you have
+            a problem. The number before the colon in the output is the line location in the curl.out file and that is how you
+            locate the problem lab. It usually means there is a mismatch between the filepath created by the plist and the 
+            actual location of the file. If everything matches, then the content probably needs to be pushed to production.

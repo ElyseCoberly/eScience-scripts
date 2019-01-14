@@ -1,0 +1,55 @@
+Pushing Storyline (V3) Content To Production
+Note for administrators: If you have admin privs on stromboli you can push content by doing the following:
+    1. sudo su - eslcd
+    2. Enter your password (your login password not the eslcd password)
+    3. pushBiology.sh or whichever script for the content you need to push.
+    4. Review the output for any errors
+    5. done.
+This document contains procedures and notes on pushing Storyline (V3) content to the production server
+(weblive1).
+
+All StoryLine-V3 source content lives in /Users/eslcd/ProductionFeed/V3 and is organized by subject matter
+under the V3 directory.
+All the shell (.sh) scripts below are located in the /Users/eslcd/bin/ directory. This document assumes you are
+logged into stromboli as the eslcd user.
+The shell scripts listed below push the top level parent directory and all child directories to the production server.
+    pushESL.sh
+        push the entire ESL Storyline hierarchy (/var/www/esl/public_html/sites/default/files/V3) to
+        production. Depending on the amount of content that has been modified, this can take minutes or hours to
+        complete.
+    pushAlliedHealth.sh
+        push the AlliedHealth hierarchy to production.
+    pushPharmaTech.sh
+        push the PharmacyTechnician hierarchy to production.
+    pushAP.sh
+        push the AnatomyAndPhysiology hierarchy to production.
+    pushAstronomy.sh
+        push the Astronomy hierarchy to production.
+    pushBiology.sh
+        push the Biology hierarchy to production.
+    pushChem.sh
+        push the Chemistry hierarchy to production.
+    pushEnviroScience.sh
+        push the EnvironmentalScience hierarchy to production.
+    pushForensics.sh
+        push the Forensics hierarchy to production.
+    pushGeology.sh
+        push the Geology hierarchy to production.
+    pushHumanBiology.sh
+        push the HumanBiology hierarchy to production.
+    pushMicro.sh
+        push the Microbiology hierarchy to production.
+    pushPhysicalScience.sh
+        push the PhysicalScience hierarchy to production.
+    pushPhysics.sh
+        push the Physics hierarchy to production.
+    pushSampleLabs.sh
+        push the Sample Labs hierarchy to production. There are no cartridges or complete kits associated with
+        this directory structure.
+
+For example, to push the Microbiology top level hierarchy to production, you would do the following from a
+terminal/shell window:
+    pushMicro.sh
+        1. Enter the pem password located in your creds.txt file, if prompted to do so.
+        2. Push script begins...
+The other scripts do the same thing for the differenct top level directories.
